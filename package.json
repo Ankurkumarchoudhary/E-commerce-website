@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "Ankur",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
   },
@@ -22,6 +23,7 @@
     "express": "^4.19.2",
     "gitignore": "^0.7.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.5.0",
     "mongoose": "^8.2.4",
     "mongoose-aggregate-paginate-v2": "^1.0.7",
     "multer": "^1.4.5-lts.1"
