@@ -8,7 +8,7 @@ const userSchema = new Schema(
       unique: true,
       lowecase: true,
       trim: true,
-      match: "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
+      match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
     fullName: {
       type: String,
@@ -20,17 +20,21 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      maxlength:50,
-      minlength:8
+      maxlength:[50, "Max length is 50"],
+      minlength:[8, "Min length is 8"],
     },
     avatar:{
        type: String //cloudnary
     },
-    adminUser: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  //   isAdmin: {
+  //     type: Boolean,
+  //     default: false,
+  //   },
+  //   isClient:{
+  //     type: Boolean,
+  //     default: false,
+  //   }
+   },
   {
     timestamps: true,
   }
