@@ -26,6 +26,9 @@ const adminSchema = new Schema(
     avatar:{
        type: String //cloudnary
     },
+    refreshToken: {
+      type: String,
+    },
    },
   {
     timestamps: true,
