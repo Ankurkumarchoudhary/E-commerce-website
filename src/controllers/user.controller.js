@@ -4,10 +4,20 @@ import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, email, password, isAdmin, isClient } = req.body;
+  const { fullName, email, password} = req.body;
 
   if ([fullName, email, password].some((field) => field?.trim() === "")) {
-    throw new ApiError(400, "All fields are required");
+    const error= new ApiError(400, "All fields are required");
+    res
+    .status(409)
+    .json(
+      new ApiResponse(
+        error.statusCode,
+        error.data,
+        "All fields are required"
+      )
+    );
+    
   }
 
   const existUser = await User.findOne({
@@ -35,7 +45,17 @@ const registerUser = asyncHandler(async (req, res) => {
   const createdUser = await User.findById(user._id).select("-password ");
 
   if (!createdUser) {
-    throw new ApiError(500, " something went wrong while registering");
+    const error= new ApiError(500, " something went wrong while registering");
+
+    res
+      .status(409)
+      .json(
+        new ApiResponse(
+          error.statusCode,
+          error.data,
+          "something went wrong while registering"
+        )
+      );
   }
 
   return res
