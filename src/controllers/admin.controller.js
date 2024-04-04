@@ -9,7 +9,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
   if ([fullName, email, password].some((field) => field?.trim() === "")) {
     const error= new ApiError(400, "All fields are required");
-    res
+   return res
     .status(409)
     .json(
       new ApiResponse(
@@ -27,7 +27,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
 
   if (existAdmin) {
     const error = new ApiError(409, "Admin with email already exist");
-    res
+    return res
       .status(409)
       .json(
         new ApiResponse(
@@ -48,7 +48,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
   if (!createdAdmin) {
     const error= new ApiError(500, " something went wrong while registering");
 
-    res
+     return res
       .status(409)
       .json(
         new ApiResponse(

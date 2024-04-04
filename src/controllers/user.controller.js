@@ -26,7 +26,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if ([fullName, email, password].some((field) => field?.trim() === "")) {
     const error = new ApiError(400, "All fields are required");
-    res
+    return res
       .status(409)
       .json(
         new ApiResponse(error.statusCode, error.data, "All fields are required")
@@ -39,7 +39,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (existUser) {
     const error = new ApiError(409, "User with email already exist");
-    res
+    return res
       .status(409)
       .json(
         new ApiResponse(
@@ -60,7 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!createdUser) {
     const error = new ApiError(500, " something went wrong while registering");
 
-    res
+   return res
       .status(409)
       .json(
         new ApiResponse(
@@ -81,7 +81,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (!email) {
     const error = new ApiError(400, "email is requried");
-    res
+   return res
       .status(400)
       .json(new ApiResponse(error.statusCode, error.data, "email is requried"));
   }
@@ -90,7 +90,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (!user) {
     const error = new ApiError(400, "User does not exist");
-    res
+    return res
       .status(400)
       .json(
         new ApiResponse(error.statusCode, error.data, "User does not exist")
@@ -101,7 +101,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (!isPasswordValid) {
     const error = new ApiError(400, "Invalid user credentials");
-    res
+    return res
       .status(400)
       .json(
         new ApiResponse(
