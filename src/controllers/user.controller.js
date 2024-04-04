@@ -26,9 +26,9 @@ const registerUser = asyncHandler(async (req, res) => {
     const { fullName, email, password } = req.body;
 
     if ([fullName, email, password].some((field) => field?.trim() === "")) {
-      const error = new ApiError(200, "All fields are required");
+      const error = new ApiError(409, "All fields are required");
       return res
-        .status(209)
+        .status(409)
         .json(
           new ApiResponse(
             error.statusCode,
@@ -66,12 +66,12 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if (!createdUser) {
       const error = new ApiError(
-        200,
+        409,
         " something went wrong while registering"
       );
 
       return res
-        .status(209)
+        .status(409)
         .json(
           new ApiResponse(
             error.statusCode,
@@ -82,12 +82,12 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     return res
-      .status(201)
+      .status(200)
       .json(new ApiResponse(200, createdUser, "User registered successfully"));
   } catch (error) {
-    error = new ApiError(200, error?.message);
+    error = new ApiError(400, error?.message);
     return res
-      .status(200)
+      .status(400)
       .json(new ApiResponse(error.statusCode, error.data, error?.message));
   }
 });
@@ -97,9 +97,9 @@ const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     if (!email) {
-      const error = new ApiError(200, "email is requried");
+      const error = new ApiError(400, "email is requried");
       return res
-        .status(200)
+        .status(400)
         .json(
           new ApiResponse(error.statusCode, error.data, "email is requried")
         );
@@ -108,9 +108,9 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      const error = new ApiError(200, "User does not exist");
+      const error = new ApiError(400, "User does not exist");
       return res
-        .status(200)
+        .status(400)
         .json(
           new ApiResponse(error.statusCode, error.data, "User does not exist")
         );
@@ -158,9 +158,9 @@ const loginUser = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    error = new ApiError(200, error?.message);
+    error = new ApiError(400, error?.message);
     return res
-      .status(200)
+      .status(400)
       .json(new ApiResponse(error.statusCode, error.data, error?.message));
   }
 });
