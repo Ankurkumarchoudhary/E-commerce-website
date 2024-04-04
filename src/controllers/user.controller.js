@@ -43,14 +43,14 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 
     if (existUser) {
-      const error = new ApiError(209, "User with email already exist");
+      const error = new ApiError(400, "User with email already exist");
       return res
-        .status(209)
+        .status(400)
         .json(
           new ApiResponse(
             error.statusCode,
             error.data,
-            "User with email or already exist"
+            "User with email already exist"
           )
         );
     }
