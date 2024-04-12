@@ -20,5 +20,5 @@ import router from "./routes/user.router.js";
 import adminRouter from "./routes/admin.router.js";
 
 app.use("/api/v1/users", router);
-app.use("/api/v1/admins", adminRouter);
+app.use("/api/v1/admin", adminRouter);
 export { app };
