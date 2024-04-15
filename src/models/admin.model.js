@@ -12,9 +12,15 @@ const adminSchema = new Schema(
       trim: true,
       match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
-    fullName: {
+    firstName: {
       type: String,
       required: true,
+      trim: true,
+      index: true,
+      maxlength:100,
+    },
+    lastName: {
+      type: String,
       trim: true,
       index: true,
       maxlength:100,

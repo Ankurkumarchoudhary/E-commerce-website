@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getAllAdmin,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
@@ -10,5 +11,6 @@ const router = Router();
 router.route("/register").post(registerAdmin);
 router.route("/login").post(loginAdmin);
 router.route("/logout").post(verifyJWT, logoutAdmin);
+router.route("/allAdmins").get(verifyJWT, getAllAdmin)
 
 export default router;

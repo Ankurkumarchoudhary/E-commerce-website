@@ -22,9 +22,9 @@ const generateAccessAndRefereshTokens = async (userId) => {
   }
 };
 const registerAdmin = asyncHandler(async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
-  if ([fullName, email, password].some((field) => field?.trim() === "")) {
+  if ([firstName, lastName, email, password].some((field) => field?.trim() === "")) {
     const error= new ApiError(400, "All fields are required");
    return res
     .status(409)
@@ -56,7 +56,8 @@ const registerAdmin = asyncHandler(async (req, res) => {
   }
 
   const admin = await Admin.create({
-    fullName,
+    firstName,
+    lastName,
     email,
     password,
   });
@@ -180,5 +181,20 @@ const logoutAdmin = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Admin logged out"));
 });
 
-export { registerAdmin, loginAdmin, logoutAdmin };
+const getAllAdmin = asyncHandler(async(req, res) =>{
+  try {
+    const admins = await Admin.find();
+    return res
+    .status(200)
+    .json( new ApiResponse ( 200,admins, "found all admins" ));
+} catch (error) {
+  
+  error = new ApiError(400, error?.message);
+  return res
+    .status(400)
+    .json(new ApiResponse(error.statusCode, error.data, error?.message));
+}
+})
+
+export { registerAdmin, loginAdmin, logoutAdmin, getAllAdmin };
 
