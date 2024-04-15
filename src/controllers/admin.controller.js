@@ -4,6 +4,23 @@ import { Admin } from "../models/admin.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 
+const generateAccessAndRefereshTokens = async (userId) => {
+  try {
+    const admin = await Admin.findById(userId);
+    const accessToken = admin.generateAccessToken();
+    const refreshToken = admin.generateRefreshToken();
+
+    admin.refreshToken = refreshToken;
+    await admin.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Something went wrong while generating referesh and access token"
+    );
+  }
+};
 const registerAdmin = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
 
@@ -64,4 +81,79 @@ const registerAdmin = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdAdmin, "Admin registered successfully"));
 });
 
-export { registerAdmin };
+const loginAdmin = asyncHandler(async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email) {
+      const error = new ApiError(400, "email is requried");
+      return res
+        .status(400)
+        .json(
+          new ApiResponse(error.statusCode, error.data, "email is requried")
+        );
+    }
+
+    const admin = await Admin.findOne({ email });
+
+    if (!admin) {
+      const error = new ApiError(400, "Admin does not exist");
+      return res
+        .status(400)
+        .json(
+          new ApiResponse(error.statusCode, error.data, "Admin does not exist")
+        );
+    }
+
+    const isPasswordValid = await admin.isPasswordCorrect(password);
+
+    if (!isPasswordValid) {
+      const error = new ApiError(401, "Invalid user credentials");
+      return res
+        .status(401)
+        .json(
+          new ApiResponse(
+            error.statusCode,
+            error.data,
+            "Invalid user credentials"
+          )
+        );
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
+      admin._id
+    );
+
+    const loggedInAdmin = await Admin.findById(admin._id).select(
+      "-password -refreshToken"
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            admin: loggedInAdmin,
+            accessToken,
+            refreshToken,
+          },
+          "Admin logged in successfully"
+        )
+      );
+  } catch (error) {
+    error = new ApiError(400, error?.message);
+    return res
+      .status(400)
+      .json(new ApiResponse(error.statusCode, error.data, error?.message));
+  }
+});
+
+export { registerAdmin, loginAdmin };
