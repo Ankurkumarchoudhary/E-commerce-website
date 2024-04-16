@@ -62,6 +62,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
     password,
   });
   const createdAdmin = await Admin.findById(admin._id).select("-password ");
+ 
 
   if (!createdAdmin) {
     const error= new ApiError(500, " something went wrong while registering");
